@@ -24,7 +24,9 @@ export default function InputAutoComplete({
 		<Autocomplete
 			options={escolaridade}
 			//onChange={(e, newValue) => search(newValue)}
-			renderInput={(params) => <TextField {...params} label="Escolaridade" />}
+			renderInput={(params) => (
+				<TextField required {...params} label="Escolaridade" />
+			)}
 			placeholder={placeholder}
 		/>
 	);
