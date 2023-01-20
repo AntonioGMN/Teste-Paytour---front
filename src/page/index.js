@@ -8,13 +8,18 @@ import Button from "@mui/material/Button";
 import Title from "../components/title";
 import Conteiner from "../components/conteiner";
 import { useState } from "react";
+import { useAlert } from "../context/AlertContext";
 
 import post from "../service";
+import LinearLoading from "../components/linearProgress";
 
 export default function HomePage() {
+	const { setMessage } = useAlert();
+	const [isLoading, setIsLoading] = useState(false);
 	const [form, setForm] = useState({
 		name: "",
 		email: "",
+		escolaridade: "",
 		cargoDesejado: "",
 		observacoes: "",
 	});
@@ -27,18 +32,23 @@ export default function HomePage() {
 
 	async function handlerSubmit(e) {
 		e.preventDefault();
-		console.log(form);
+		setIsLoading(true);
 
 		const dataForm = new FormData();
 		dataForm.append("file", file);
-		dataForm.append("body", form);
+		dataForm.append("nome", form.name);
+		dataForm.append("email", form.email);
+		dataForm.append("escolaridade", form.escolaridade);
+		dataForm.append("cargoDesejado", form.cargoDesejado);
+		dataForm.append("observacoes", form.observacoes);
 
 		try {
-			console.log(file);
-			const response = await post(dataForm);
-			console.log(response.data);
+			console.log(form);
+			await post(dataForm);
+			setIsLoading(false);
+			setMessage({ text: "Envio concluido", type: "success" });
 		} catch (erro) {
-			console.log(erro);
+			setMessage({ text: "Tipo de arquivo incompativel" });
 		}
 
 		return;
@@ -71,7 +81,8 @@ export default function HomePage() {
 						value={form.cargoDesejado}
 						onChange={(e) => handlerInput(e)}
 					/>
-					<InputAutoComplete required />
+					<InputAutoComplete obj={form} setObj={setForm} required />
+
 					<TextField
 						label="Obsevações"
 						name="observacoes"
@@ -92,7 +103,7 @@ export default function HomePage() {
 						sx={{ height: 50, marginTop: 2 }}
 						variant="contained"
 					>
-						Enviar Condidatura
+						{isLoading ? <LinearLoading /> : "Enviar Condidatura"}
 					</Button>
 				</Form>
 			</Conteiner>

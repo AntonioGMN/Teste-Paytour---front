@@ -2,14 +2,7 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function InputAutoComplete({
-	searchType,
-	list,
-	obj,
-	setObj,
-	placeholder,
-	defaultValue,
-}) {
+export default function InputAutoComplete({ name, obj, setObj }) {
 	const escolaridade = [
 		"Ensino Médio",
 		"Tecnólogo",
@@ -22,12 +15,16 @@ export default function InputAutoComplete({
 
 	return (
 		<Autocomplete
+			valeu={obj.escolaridade}
+			onChange={(e, newValeu) => setObj({ ...obj, escolaridade: newValeu })}
+			inputValue={obj.escolaridade}
+			onInputChange={(e, newInputValue) =>
+				setObj({ ...obj, escolaridade: newInputValue })
+			}
 			options={escolaridade}
-			//onChange={(e, newValue) => search(newValue)}
 			renderInput={(params) => (
 				<TextField required {...params} label="Escolaridade" />
 			)}
-			placeholder={placeholder}
 		/>
 	);
 }
